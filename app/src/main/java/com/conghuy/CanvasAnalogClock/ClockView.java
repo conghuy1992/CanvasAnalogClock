@@ -65,13 +65,37 @@ public class ClockView extends View {
         drawNumeral(canvas);
         drawHands(canvas);
 
+//        drawNumber(canvas);
+
         postInvalidateDelayed(500);
         invalidate();
     }
+    private void drawNumber(Canvas canvas){
+        float cx = getWidth() / 2f;
+        float cy = getHeight() / 2f;
 
+        float scaleMarkSize =paint.getTextSize();
+        float radius = Math.min(getWidth(), getHeight()) / 2;
+
+        for (int i = -90; i < 90; i += 1) {
+            float angle = (float) Math.toRadians(i); // Need to convert to radians first
+
+            float startX = (float) (cx + radius * Math.sin(angle));
+            float startY = (float) (cy - radius * Math.cos(angle));
+
+            float stopX = (float) (cx + (radius - scaleMarkSize) * Math.sin(angle));
+            float stopY = (float) (cy - (radius - scaleMarkSize) * Math.cos(angle));
+
+            canvas.drawLine(startX, startY, stopX, stopY, paint);
+//            canvas.drawText(""+i, startX, startY, paint);
+        }
+
+    }
     private void drawHand(Canvas canvas, double loc, boolean isHour) {
         double angle = Math.PI * loc / 30 - Math.PI / 2;
-        int handRadius = isHour ? radius - handTruncation - hourHandTruncation : radius - handTruncation;
+        int handRadius = isHour
+                ? radius - handTruncation - hourHandTruncation
+                : radius - handTruncation;
         canvas.drawLine(width / 2, height / 2,
                 (float) (width / 2 + Math.cos(angle) * handRadius),
                 (float) (height / 2 + Math.sin(angle) * handRadius),
@@ -103,6 +127,7 @@ public class ClockView extends View {
     private void drawCenter(Canvas canvas) {
         paint.setStyle(Paint.Style.FILL);
         canvas.drawCircle(width / 2, height / 2, 12, paint);
+//        canvas.drawLine(0,height/2,width,height/2,paint);
     }
 
     private void drawCircle(Canvas canvas) {
